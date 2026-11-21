@@ -48,9 +48,14 @@ internal data class OdometerPlan(val moves: List<GlyphMove>, val exits: List<Gly
  * appears before it; the suffix is aligned from the left. Amounts use tabular
  * figures, so a digit paired with a digit occupies the same width and can roll
  * in place.
+ *
+ * [decimalSeparator] is the separator of the formatter that produced both
+ * strings. Omit it only when that formatter isn't known; [decimalSeparatorOf]
+ * then guesses, and it guesses wrong for a three-decimal amount beside a whole
+ * one (`KWD 12.345` → `KWD 13`).
  */
-internal fun odometerPlan(old: String, new: String): OdometerPlan? {
-    val point = decimalSeparatorOf(old, new)
+internal fun odometerPlan(old: String, new: String, decimalSeparator: Char? = null): OdometerPlan? {
+    val point = decimalSeparator ?: decimalSeparatorOf(old, new)
     val oldParts = AmountParts.of(old, point) ?: return null
     val newParts = AmountParts.of(new, point) ?: return null
     val pairs = ArrayList<Pair<Int?, Int?>>(maxOf(old.length, new.length))
@@ -88,8 +93,8 @@ internal fun odometerPlan(old: String, new: String): OdometerPlan? {
  * `$461`), so each side's digits are scaled to the same number of fraction
  * digits before comparing.
  */
-internal fun compareAmounts(old: String, new: String): Int? {
-    val point = decimalSeparatorOf(old, new)
+internal fun compareAmounts(old: String, new: String, decimalSeparator: Char? = null): Int? {
+    val point = decimalSeparator ?: decimalSeparatorOf(old, new)
     val a = AmountParts.of(old, point) ?: return null
     val b = AmountParts.of(new, point) ?: return null
     return compareValues(a, b)
@@ -117,14 +122,17 @@ private fun alignStart(old: IntRange, new: IntRange): List<Pair<Int?, Int?>> {
 }
 
 /**
- * The decimal separator two amounts of one currency share, or null when neither
- * shows one. A string alone can't always tell: `12.345` is twelve dinars in KWD
- * (three decimals) and twelve thousand in EUR (`.` groups), and the formatter
- * drops trailing zeros. So both strings vote, strongest evidence first: two
- * different separators (the last is decimal, `1.234,5`); then a final separator
- * followed by one or two digits (no grouping is that short). Failing both, a
- * lone `.`/`,` with three digits after it is read as grouping in both strings —
- * consistently, so digits still pair up and compare correctly.
+ * Guesses the decimal separator two amounts share, or null when neither shows
+ * one. Pass the formatter's separator to [odometerPlan] instead when you have
+ * it: this guess can't tell `12.345` (twelve dinars) from a thousands group
+ * once the other amount is whole (`13`), because the formatter drops the
+ * fraction and three digits is also how grouping looks.
+ *
+ * Both strings vote, strongest evidence first: two different separators (the
+ * last is decimal, `1.234,5`); then a final separator followed by one or two
+ * digits (no grouping is that short). Failing both, a lone `.`/`,` with three
+ * digits after it is read as grouping in both strings — consistently, so
+ * digits still pair up and compare correctly.
  */
 internal fun decimalSeparatorOf(a: String, b: String): Char? {
     val cores = listOf(a, b).mapNotNull { text ->

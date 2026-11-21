@@ -223,6 +223,7 @@ fun BalanceCard(
                         maxLines = 1,
                         // A long amount shrinks to fit rather than wrapping mid-number.
                         autoSize = TextAutoSize.StepBased(PennyWiseText.autoSizeFloor, heroStyle.fontSize),
+                        decimalSeparator = CurrencyFormatter.decimalSeparator(budget?.currency ?: currency),
                     )
                 }
                 // Hidden amounts hide the meter too: a known limit and its fill give the spend away.

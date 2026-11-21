@@ -51,9 +51,13 @@ import kotlin.math.roundToInt
  *
  * It is still one [Text] — one semantics node, its own `maxLines` and `autoSize`
  * — and the roll is only drawn over it, from that text's own layout. A roll is
- * skipped (the value just swaps) on the first show, while amounts are hidden,
- * with animations off, and whenever the text doesn't sit on one unclipped line
- * or the auto-sized font size changes with the value.
+ * skipped (the value just swaps, and any grade pulse stops) on the first show,
+ * while amounts are hidden, with animations off, whenever the text doesn't sit
+ * on one unclipped line or the auto-sized font size changes with the value,
+ * and when a new amount arrives while a roll is still running.
+ *
+ * [decimalSeparator] is the separator of the formatter that produced [text].
+ * Without it a three-decimal amount beside a whole one rolls the wrong way.
  */
 @Composable
 fun AnimatedCurrencyText(
@@ -64,6 +68,7 @@ fun AnimatedCurrencyText(
     fontWeight: FontWeight? = null,
     maxLines: Int = Int.MAX_VALUE,
     autoSize: TextAutoSize? = null,
+    decimalSeparator: Char? = null,
 ) {
     val animationsEnabled = rememberAnimationsEnabled()
     // Hiding/showing amounts is a privacy toggle, not a value change: the mask
@@ -94,6 +99,7 @@ fun AnimatedCurrencyText(
         odometer.rollSpec = rollSpec
         odometer.pulseSpec = pulseSpec
         odometer.pulses = pulses
+        odometer.decimalSeparator = decimalSeparator
     }
     val textColor = color.takeOrElse { style.color.takeOrElse { LocalContentColor.current } }
     Text(
@@ -119,6 +125,9 @@ fun AnimatedCurrencyText(
  */
 private class Roll(
     val newWidth: Int,
+    val oldWidth: Int,
+    /** Old layout's x shift: 0 in LTR; in RTL, the amount the left edge moved. */
+    val anchor: Float,
     val pieces: List<Piece>,
     val rollsUp: Boolean,
     /** Old-text masks by character range, built once. */
@@ -165,6 +174,7 @@ private class Odometer(private val scope: CoroutineScope, private val measurer: 
     var rollSpec: FiniteAnimationSpec<Float> = snap()
     var pulseSpec: FiniteAnimationSpec<Float> = snap()
     var pulses = false
+    var decimalSeparator: Char? = null
 
     private val pulse = Animatable(0f)
 
@@ -192,23 +202,26 @@ private class Odometer(private val scope: CoroutineScope, private val measurer: 
             if (sameGeometry(old, new)) roll.new = masks(new, roll.newRanges) else stopRoll()
             return
         }
-        startRoll(old, new)
-        if (pulses) {
-            pulseJob?.cancel()
-            pulseJob = scope.launch {
-                pulse.snapTo(1f)
-                pulse.animateTo(0f, pulseSpec)
-            }
+        if (roll != null) {
+            // `old` is the target this roll has not reached. A replacement roll
+            // would start from a figure that never settled, so show the latest
+            // value. The next change rolls from that settled value.
+            stopRoll()
+            stopPulse()
+            return
         }
+        // The grade moves only with a roll. A swap leaves it at rest.
+        if (startRoll(old, new) && pulses) startPulse() else stopPulse()
     }
 
-    private fun startRoll(old: TextLayoutResult, new: TextLayoutResult) {
-        val plan = odometerPlan(old.layoutInput.text.text, new.layoutInput.text.text)
+    /** True only when a roll was actually started. An ineligible amount just swaps. */
+    private fun startRoll(old: TextLayoutResult, new: TextLayoutResult): Boolean {
+        val plan = odometerPlan(old.layoutInput.text.text, new.layoutInput.text.text, decimalSeparator)
         if (plan == null || !plan.changed || !fitsOneLine(old) || !fitsOneLine(new) ||
             old.layoutInput.style.fontSize != new.layoutInput.style.fontSize
         ) {
             stopRoll()
-            return
+            return false
         }
         // Start-anchored: in RTL a width change moves the left edge, so old x
         // positions shift by the difference.
@@ -243,6 +256,8 @@ private class Odometer(private val scope: CoroutineScope, private val measurer: 
         }
         roll = Roll(
             newWidth = new.size.width,
+            oldWidth = old.size.width,
+            anchor = anchor,
             pieces = pieces,
             rollsUp = plan.rollsUp,
             old = masks(old, pieces.mapNotNull { it.oldRange }),
@@ -254,6 +269,21 @@ private class Odometer(private val scope: CoroutineScope, private val measurer: 
             animate(0f, 1f, animationSpec = rollSpec) { value, _ -> progress = value }
             roll = null
         }
+        return true
+    }
+
+    private fun startPulse() {
+        pulseJob?.cancel()
+        pulseJob = scope.launch {
+            pulse.snapTo(1f)
+            pulse.animateTo(0f, pulseSpec)
+        }
+    }
+
+    /** A swapped amount keeps the resting grade: an in-flight pulse must not keep moving it. */
+    private fun stopPulse() {
+        pulseJob?.cancel()
+        pulseJob = scope.launch { pulse.snapTo(0f) }
     }
 
     private fun stopRoll() {
@@ -302,8 +332,10 @@ private class Odometer(private val scope: CoroutineScope, private val measurer: 
         val bottom = new.getLineBottom(0)
         // Up: the old glyph leaves through the top and the new one comes from below.
         val travel = (bottom - top) * if (roll.rollsUp) -1f else 1f
-        // Rolling glyphs are cut at the line box only, never at their sides.
-        val wide = size.width
+        // Cut rolling glyphs at the line box only. Horizontally the clip covers
+        // both anchored layouts, so a much shorter amount doesn't slice off the
+        // outgoing digits (twice the new width used to).
+        val clip = rollClip(size.width, roll.oldWidth.toFloat(), roll.anchor, size.width)
         for (piece in roll.pieces) {
             val newMask = piece.newRange?.let { roll.new[it] }
             val oldMask = piece.oldRange?.let { roll.old[it] }
@@ -313,20 +345,20 @@ private class Odometer(private val scope: CoroutineScope, private val measurer: 
                 is Piece.Turn -> {
                     val dx = piece.shift * (1f - p)
                     val t = stagger(p, piece.delay)
-                    clipRect(-wide, top, 2 * wide, bottom) {
+                    clipRect(clip.left, top, clip.right, bottom) {
                         translate(piece.left + dx - piece.oldLeft, travel * t) { oldMask?.let { drawText(it, color) } }
                         translate(dx, -travel * (1f - t)) { newMask?.let { drawText(it, color) } }
                     }
                 }
                 is Piece.Enter -> {
                     val t = stagger(p, piece.delay)
-                    clipRect(-wide, top, 2 * wide, bottom) {
+                    clipRect(clip.left, top, clip.right, bottom) {
                         translate(top = -travel * (1f - t)) { newMask?.let { drawText(it, color, alpha = t) } }
                     }
                 }
                 is Piece.Exit -> {
                     val t = stagger(p, piece.delay)
-                    clipRect(-wide, top, 2 * wide, bottom) {
+                    clipRect(clip.left, top, clip.right, bottom) {
                         translate(piece.shift, travel * t) { oldMask?.let { drawText(it, color, alpha = 1f - t) } }
                     }
                 }
@@ -334,6 +366,18 @@ private class Odometer(private val scope: CoroutineScope, private val measurer: 
         }
     }
 }
+
+/**
+ * Horizontal clip for a roll: both anchored layouts, plus [pad] so ink that
+ * overhangs a layout isn't cut at the side. [anchor] is the old layout's x
+ * shift (0 in LTR; negative in RTL when the old text is wider).
+ */
+internal fun rollClip(newWidth: Float, oldWidth: Float, anchor: Float, pad: Float) = RollClip(
+    left = minOf(0f, anchor) - pad,
+    right = maxOf(newWidth, oldWidth + anchor) + pad,
+)
+
+internal data class RollClip(val left: Float, val right: Float)
 
 /** Paints a character nothing, without changing how the text measures or shapes. */
 private val Hidden = SpanStyle(color = Color.Transparent)

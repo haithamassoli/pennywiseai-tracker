@@ -3,6 +3,7 @@ package com.pennywiseai.tracker.ui.components
 import com.pennywiseai.tracker.ui.components.GlyphChange.Enter
 import com.pennywiseai.tracker.ui.components.GlyphChange.Roll
 import com.pennywiseai.tracker.ui.components.GlyphChange.Same
+import com.pennywiseai.tracker.utils.CurrencyFormatter
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
@@ -140,5 +141,30 @@ class OdometerDiffTest {
         assertNull(decimalSeparatorOf("₹19,164", "₹10,700"))
         assertEquals(-1, compareAmounts("₹19,164", "₹10,700"))
         assertEquals(1, compareAmounts("1.234 €", "1.235 €"))
+    }
+
+    @Test
+    fun `the formatter decimal keeps a three-decimal increase and indian grouping`() {
+        // KWD 12.345 → 13 grew. A digit-count guess returns null (three fraction
+        // digits, and the whole amount has no fraction), so 12.345 was read as
+        // 12345 and rolled down. The separator has to come from the formatter.
+        assertNull(decimalSeparatorOf("KWD 12.345", "KWD 13"))
+        val kwdPoint = CurrencyFormatter.decimalSeparator("KWD")
+        assertEquals(1, compareAmounts("KWD 12.345", "KWD 13", kwdPoint))
+        val kwd = checkNotNull(odometerPlan("KWD 12.345", "KWD 13", kwdPoint))
+        assertTrue(kwd.rollsUp)
+        assertEquals(listOf(Same, Same, Same, Same, Same, Roll), kwd.moves.map { it.change })
+        assertEquals(listOf(6, 7, 8, 9), kwd.exits.map { it.oldIndex })
+
+        // INR 19,164 → 10,700 shrank. The comma stays grouping, not decimal.
+        val inrPoint = CurrencyFormatter.decimalSeparator("INR")
+        assertEquals(-1, compareAmounts("INR 19,164", "INR 10,700", inrPoint))
+        val inr = checkNotNull(odometerPlan("INR 19,164", "INR 10,700", inrPoint))
+        assertFalse(inr.rollsUp)
+        assertTrue(inr.exits.isEmpty())
+        assertEquals(
+            listOf(Same, Same, Same, Same, Same, Roll, Same, Roll, Roll, Roll),
+            inr.moves.map { it.change }
+        )
     }
 }
