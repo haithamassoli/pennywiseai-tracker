@@ -5,6 +5,7 @@ import android.net.Uri
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.input.clearText
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -114,6 +116,7 @@ fun SettingsScreen(
     val hub by hubViewModel.state.collectAsStateWithLifecycle()
     var showUpgradeSheet by remember { mutableStateOf(false) }
     var showSupportDialog by remember { mutableStateOf(false) }
+    var showEditProfile by rememberSaveable { mutableStateOf(false) }
     // Search takes over the bar and the page; Back closes it before it leaves Settings.
     var searching by rememberSaveable { mutableStateOf(false) }
     // Saved so rotation requests focus again when the field was focused. Set when search
@@ -211,6 +214,7 @@ fun SettingsScreen(
         ) {
             SettingsProfileHeader(
                 state = hub,
+                onEdit = { showEditProfile = true },
                 modifier = Modifier.onSizeChanged { profileHeight = it.height },
             )
 
@@ -420,6 +424,15 @@ fun SettingsScreen(
         }
     }
 
+    if (showEditProfile) {
+        EditProfileSheet(
+            state = hub,
+            onImportPhoto = hubViewModel::importPhoto,
+            onSave = hubViewModel::saveProfile,
+            onDismiss = { showEditProfile = false },
+        )
+    }
+
     if (showUpgradeSheet) {
         UpgradeSheet(onDismiss = { showUpgradeSheet = false })
     }
@@ -465,9 +478,9 @@ private fun SettingsGroupHeader(title: String) {
     )
 }
 
-/** The user, big and centred, with the app's one promise under their name. */
+/** The user, big and centred, with the app's one promise under their name. Tapping them edits them. */
 @Composable
-private fun SettingsProfileHeader(state: SettingsHubState, modifier: Modifier = Modifier) {
+private fun SettingsProfileHeader(state: SettingsHubState, onEdit: () -> Unit, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -475,14 +488,37 @@ private fun SettingsProfileHeader(state: SettingsHubState, modifier: Modifier = 
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(Spacing.sm),
     ) {
-        ProfileAvatar(
-            name = state.name,
-            imageUri = state.imageUri,
-            backgroundColor = state.backgroundColor,
-            size = Dimensions.Icon.extraLarge,
-            shape = MaterialShapes.Cookie9Sided.toShape(),
-            initialsStyle = MaterialTheme.typography.headlineLargeEmphasized,
-        )
+        // The pencil badge says the avatar is tappable and names the one button. Editing
+        // waits for the stored profile, or the sheet would start from blanks.
+        Box(
+            modifier = Modifier
+                .clip(MaterialTheme.shapes.extraLarge)
+                .clickable(enabled = state.isLoaded, role = Role.Button, onClick = onEdit),
+        ) {
+            ProfileAvatar(
+                name = state.name,
+                imageUri = state.imageUri,
+                backgroundColor = state.backgroundColor,
+                size = Dimensions.Icon.extraLarge,
+                shape = MaterialShapes.Cookie9Sided.toShape(),
+                initialsStyle = MaterialTheme.typography.headlineLargeEmphasized,
+            )
+            Surface(
+                shape = CircleShape,
+                color = MaterialTheme.colorScheme.primaryContainer,
+                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
+                border = BorderStroke(Spacing.xxs, MaterialTheme.colorScheme.background),
+                modifier = Modifier.align(Alignment.BottomEnd),
+            ) {
+                Icon(
+                    Icons.Default.Edit,
+                    contentDescription = stringResource(R.string.settings_profile_edit),
+                    modifier = Modifier
+                        .padding(Spacing.xs)
+                        .size(Dimensions.Icon.small),
+                )
+            }
+        }
         if (state.name.isNotBlank()) {
             Text(
                 text = state.name,
