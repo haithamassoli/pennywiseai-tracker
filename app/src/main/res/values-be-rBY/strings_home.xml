@@ -3,7 +3,6 @@
     <!-- ══ Home screen ══ -->
     <string name="home_transaction_deleted">Транзакцыя выдалена</string>
     <string name="home_undo">Адрабіць</string>
-    <string name="home_upgrade_pro">Перайсці на PennyWise Pro</string>
     <string name="home_profile_filter">Фільтр профілю</string>
     <string name="home_more_options">Іншыя параметры</string>
     <string name="home_view_all">Усе</string>
@@ -11,15 +10,12 @@
     <string name="home_manage">Кіраваць</string>
     <string name="home_search_transactions">Пошук транзакцый</string>
     <string name="home_cancel">Скасаваць</string>
-    <string name="home_close">Закрыць</string>
     <!-- Home sections (headers + edit-home sheet) -->
     <string name="home_section_budgets">Бюджэты</string>
     <string name="home_section_goals">Мэты</string>
     <string name="home_section_loans">Пазыкі</string>
     <string name="home_section_groups">Групы</string>
-    <string name="home_section_recent_transactions">Апошнія транзакцыі</string>
     <string name="home_section_accounts">Банкаўскія рахункі</string>
-    <string name="home_section_subscriptions">Бліжэйшыя падпіскі</string>
     <string name="home_section_activity">Актыўнасць</string>
     <!-- Empty state -->
     <string name="home_empty_headline">Транзакцый пакуль няма</string>
@@ -30,13 +26,15 @@
     <string name="home_fab_sync">Сінхранізаваць SMS (доўгі націск — поўная перасінхранізацыя)</string>
     <string name="home_fab_sync_hint">Утрымлівайце для поўнай перасінхранізацыі</string>
     <string name="home_resync_title">Прачытаць паведамленні зноў</string>
+    <!-- Home shortcut labels sit under a 64dp shape: keep them to about 10 characters -->
+    <!-- Read out for the Unsorted shortcut with its count badge -->
+    <!-- %1$d is the most shortcuts the row holds (4) -->
     <string name="home_resync_scan_again">Прасканаваць усе паведамленні зноў</string>
     <string name="home_resync_scan_again_desc">Дадае ўсё, што было прапушчана. Вашы праўкі і ўсе існуючыя транзакцыі застануцца як ёсць.</string>
     <string name="home_resync_rebuild">Перабудаваць з нуля</string>
     <string name="home_resync_rebuild_desc">Наноў чытае SMS-транзакцыі, каб улічыць выпраўленні ў распазнаванні. Праўкі SMS-транзакцый будуць скінуты. Ручныя, імпартаваныя, пазыковыя і згрупаваныя транзакцыі захоўваюцца.</string>
     <!-- More options sheet -->
     <string name="home_menu_title">Іншыя параметры</string>
-    <string name="home_menu_settings">Налады</string>
     <string name="home_menu_edit_home">Змяніць галоўны экран</string>
     <string name="home_menu_discord">Далучыцца да Discord для водгукаў</string>
     <string name="home_menu_rate">Ацаніць у Play Store</string>
@@ -45,13 +43,6 @@
     <string name="home_edit_description">Змяняйце парадак раздзелаў на галоўным экране або хавайце іх.</string>
     <string name="home_edit_move_up">Перамясціць %1$s вышэй</string>
     <string name="home_edit_move_down">Перамясціць %1$s ніжэй</string>
-    <!-- Calculation breakdown dialog -->
-    <string name="home_breakdown_title">Як гэта палічана</string>
-    <!-- Month name, then day range, e.g. "March 1-15" -->
-    <string name="home_breakdown_formula">Формула: Даходы - Выдаткі = Чысты вынік\nЗялёны (+) = Зберажэнні | Чырвоны (-) = Перарасход</string>
-    <string name="home_breakdown_income">Даходы</string>
-    <string name="home_breakdown_expenses">Выдаткі</string>
-    <string name="home_breakdown_net_worth">Чысты вынік</string>
     <!-- Subscriptions + loans summary cards -->
     <plurals name="home_active_subscriptions">
         <item quantity="one">%1$d актыўная падпіска</item>
@@ -69,13 +60,6 @@
     <string name="home_loans_owed_to_you">Вам вінны %1$s</string>
     <string name="home_loans_you_owe">Вы вінны %1$s</string>
     <!-- ══ Greeting card (home header) ══ -->
-    <string name="greeting_last_day_of_month">Апошні дзень месяца: %1$s</string>
-    <plurals name="greeting_days_left_in_month">
-        <item quantity="one">%2$s: застаўся %1$d дзень</item>
-        <item quantity="few">%2$s: засталося %1$d дні</item>
-        <item quantity="many">%2$s: засталося %1$d дзён</item>
-        <item quantity="other">%2$s: засталося %1$d дня</item>
-    </plurals>
     <string name="greeting_good_morning">Добрай раніцы</string>
     <string name="greeting_good_afternoon">Добры дзень</string>
     <string name="greeting_good_evening">Добры вечар</string>
@@ -86,8 +70,8 @@
     <!-- ══ Bottom navigation ══ -->
     <string name="nav_home">Галоўная</string>
     <string name="nav_transactions">Транзакцыі</string>
-    <string name="nav_analytics">Аналітыка</string>
-    <string name="nav_chat">Чат</string>
+    <string name="nav_analytics">Агляды</string>
+    <string name="nav_chat">Спытаць</string>
     <!-- ══ Shared components ══ -->
     <string name="expandable_list_view_less">Паказаць менш</string>
     <string name="expandable_list_view_all_more">Паказаць усе (яшчэ %1$d)</string>
@@ -174,6 +158,7 @@
     <string name="balance_card_summary_expenses">Выдаткі</string>
     <string name="balance_card_summary_lent">Пазычана</string>
     <string name="balance_card_summary_saved">Адкладзена</string>
+    <!-- TalkBack: what tapping a figure does ("double tap to see its transactions") -->
     <!-- Budget card -->
     <string name="budget_card_over_budget">%1$s звыш бюджэту</string>
     <string name="budget_card_remaining">Засталося %1$s</string>
@@ -364,6 +349,16 @@
     <string name="home_payday_card_body">Здаецца, зарплата прыходзіць %1$d-га чысла. Пачынаць кожны бюджэтны месяц з гэтага дня? Гэта можна змяніць у Наладах.</string>
     <string name="home_payday_card_action">Пачынаць %1$d-га</string>
     <string name="home_payday_card_dismiss">Закрыць</string>
+    <!-- Home hero card. %1$s is a month name ("November") -->
+    <!-- %1$s is the user's own budget name -->
+    <!-- %1$s is a month name ("November") -->
+    <!-- %1$s is the user's own budget name -->
+    <!-- %1$s is a formatted amount -->
+    <!-- The budget limit under the progress bar; %1$s is a formatted amount -->
+    <!-- What can still be spent each day; %1$s is a formatted amount -->
+    <!-- Home nudge under the hero: the mascot's one line. %1$s is a formatted amount -->
+    <!-- Home sections -->
+    <!-- Subtitle of a recent transaction still in Others -->
     <!-- Month-end forecast on the "Spent this month" card -->
     <string name="forecast_on_track">Прагноз: %1$s да %2$s</string>
     <string name="forecast_over_usual">На %1$s больш, чым звычайна</string>

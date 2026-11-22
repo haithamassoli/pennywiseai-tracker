@@ -3,7 +3,6 @@
     <!-- ══ Home screen ══ -->
     <string name="home_transaction_deleted">Transakce odstraněna</string>
     <string name="home_undo">Zpět</string>
-    <string name="home_upgrade_pro">Upgradovat na PennyWise Pro</string>
     <string name="home_profile_filter">Filtr profilu</string>
     <string name="home_more_options">Další možnosti</string>
     <string name="home_view_all">Zobrazit vše</string>
@@ -11,15 +10,12 @@
     <string name="home_manage">Spravovat</string>
     <string name="home_search_transactions">Hledat transakce</string>
     <string name="home_cancel">Zrušit</string>
-    <string name="home_close">Zavřít</string>
     <!-- Home sections (headers + edit-home sheet) -->
     <string name="home_section_budgets">Rozpočty</string>
     <string name="home_section_goals">Cíle</string>
     <string name="home_section_loans">Půjčky</string>
     <string name="home_section_groups">Skupiny</string>
-    <string name="home_section_recent_transactions">Poslední transakce</string>
     <string name="home_section_accounts">Bankovací účty</string>
-    <string name="home_section_subscriptions">Nadcházející předplatné</string>
     <string name="home_section_activity">Aktivita</string>
     <!-- Empty state -->
     <string name="home_empty_headline">Zatím žádné transakce</string>
@@ -30,30 +26,23 @@
     <string name="home_fab_sync">Synchronizovat SMS (dlouhý stisk pro kompletní opětovné uložení)</string>
     <string name="home_fab_sync_hint">Podržte pro kompletní resynchronizaci</string>
     <string name="home_resync_title">Znovu načíst zprávy</string>
+    <!-- Home shortcut labels sit under a 64dp shape: keep them to about 10 characters -->
+    <!-- Read out for the Unsorted shortcut with its count badge -->
+    <!-- %1$d is the most shortcuts the row holds (4) -->
     <string name="home_resync_scan_again">Znovu naskenovat všechny zprávy</string>
     <string name="home_resync_scan_again_desc">Doplní vše, co chybělo. Vaše úpravy i všechny stávající transakce zůstanou beze změny.</string>
     <string name="home_resync_rebuild">Sestavit znovu od začátku</string>
     <string name="home_resync_rebuild_desc">Znovu načte transakce ze SMS, aby se projevily opravy parserů. Úpravy SMS transakcí se zruší. Ruční, importované, úvěrové a seskupené transakce zůstanou zachovány.</string>
     <!-- More options sheet -->
     <string name="home_menu_title">Další možnosti</string>
-    <string name="home_menu_settings">Nastavení</string>
     <string name="home_menu_edit_home">Upravit domácí obrazovku</string>
     <string name="home_menu_discord">Připojte se k Discordu pro zpětnou vazbu</string>
     <string name="home_menu_rate">Ohodnotit v Obchodě Play</string>
-    <string name="home_version">v%1$s</string>
     <!-- Edit home screen sheet -->
     <string name="home_edit_title">Upravit domácí obrazovku</string>
     <string name="home_edit_description">Změnit pořadí nebo skrýt sekce na domovské obrazovce.</string>
     <string name="home_edit_move_up">Přesunout %1$s nahoru</string>
     <string name="home_edit_move_down">Přesunout %1$s dolů</string>
-    <!-- Calculation breakdown dialog -->
-    <string name="home_breakdown_title">Rozdělení výpočtu</string>
-    <!-- Month name, then day range, e.g. "March 1-15" -->
-    <string name="home_breakdown_period">%1$s 1 -%2$d</string>
-    <string name="home_breakdown_formula">Formulář: Příjmy - výdaje = čisté jmění\nZelená (+) = Úspory | Červená (-) = překročení výdajů</string>
-    <string name="home_breakdown_income">Výnosy</string>
-    <string name="home_breakdown_expenses">Výdaje</string>
-    <string name="home_breakdown_net_worth">Čisté jmění</string>
     <!-- Subscriptions + loans summary cards -->
     <plurals name="home_active_subscriptions">
         <item quantity="one">%1$d aktivní předplatné</item>
@@ -71,13 +60,6 @@
     <string name="home_loans_owed_to_you">%1$s vám dluží</string>
     <string name="home_loans_you_owe">Dlužíte %1$s</string>
     <!-- ══ Greeting card (home header) ══ -->
-    <string name="greeting_last_day_of_month">Poslední den %1$s</string>
-    <plurals name="greeting_days_left_in_month">
-        <item quantity="one">%1$d den zbývá %2$s</item>
-        <item quantity="few">%1$d dní zbývá %2$s</item>
-        <item quantity="many">%1$d dní zbývá %2$s</item>
-        <item quantity="other">%1$d dní zbývá %2$s</item>
-    </plurals>
     <string name="greeting_good_morning">Dobré ráno</string>
     <string name="greeting_good_afternoon">Dobré odpoledne</string>
     <string name="greeting_good_evening">Dobrý večer</string>
@@ -88,8 +70,8 @@
     <!-- ══ Bottom navigation ══ -->
     <string name="nav_home">Domů</string>
     <string name="nav_transactions">Časová osa</string>
-    <string name="nav_analytics">Analytici</string>
-    <string name="nav_chat">Konverzace</string>
+    <string name="nav_analytics">Přehledy</string>
+    <string name="nav_chat">Zeptat se</string>
     <!-- ══ Shared components ══ -->
     <string name="expandable_list_view_less">Zobrazit méně</string>
     <string name="expandable_list_view_all_more">Zobrazit vše (%1$d další)</string>
@@ -176,6 +158,7 @@
     <string name="balance_card_summary_expenses">Výdaje</string>
     <string name="balance_card_summary_lent">Půjčeno</string>
     <string name="balance_card_summary_saved">Ušetřeno</string>
+    <!-- TalkBack: what tapping a figure does ("double tap to see its transactions") -->
     <!-- Budget card -->
     <string name="budget_card_percent">%1$d%%</string>
     <string name="budget_card_over_budget">%1$s nad rozpočtem</string>
@@ -369,6 +352,16 @@
     <string name="home_payday_card_body">Zdá se, že výplata vám chodí %1$d. dne v měsíci. Začínat každý rozpočtový měsíc tímto dnem? Můžete to změnit v Nastavení.</string>
     <string name="home_payday_card_action">Začínat %1$d. dne</string>
     <string name="home_payday_card_dismiss">Zavřít</string>
+    <!-- Home hero card. %1$s is a month name ("November") -->
+    <!-- %1$s is the user's own budget name -->
+    <!-- %1$s is a month name ("November") -->
+    <!-- %1$s is the user's own budget name -->
+    <!-- %1$s is a formatted amount -->
+    <!-- The budget limit under the progress bar; %1$s is a formatted amount -->
+    <!-- What can still be spent each day; %1$s is a formatted amount -->
+    <!-- Home nudge under the hero: the mascot's one line. %1$s is a formatted amount -->
+    <!-- Home sections -->
+    <!-- Subtitle of a recent transaction still in Others -->
     <!-- Month-end forecast on the "Spent this month" card -->
     <string name="forecast_on_track">Směřujete k %1$s do %2$s</string>
     <string name="forecast_over_usual">%1$s nad obvyklou úrovní</string>

@@ -927,8 +927,8 @@ class BudgetGroupRepository @Inject constructor(
      * "Frozen as of …".
      *
      * For the current month, the week containing today is live (cap =
-     * today); every other week is frozen at the month end. For a
-     * historical month, every week is frozen at the month end.
+     * today); every other week is frozen at its own end or the month end,
+     * whichever comes first. For a historical month, likewise for every week.
      *
      * [convert]: unified mode, how every currency's spending (and the carry's) converts
      * into [currency], as on the Budgets card; null counts [currency] only.
@@ -938,14 +938,14 @@ class BudgetGroupRepository @Inject constructor(
         year: Int,
         month: Int,
         currency: String,
-        convert: (suspend (fromCurrency: String, amount: BigDecimal) -> BigDecimal?)? = null
+        convert: (suspend (fromCurrency: String, amount: BigDecimal) -> BigDecimal?)? = null,
+        today: LocalDate = LocalDate.now()
     ): List<PastWindowSpending> {
-        val today = LocalDate.now()
         val startDay = userPreferencesRepository.getBudgetCycleStartDay()
         val ym = YearMonth.of(year, month)
         val monthEnd = ym.atEndOfMonth()
         val isCurrentMonth = year == today.year && month == today.monthValue
-        val windows = windowsForMonth(budget, year, month, startDay)
+        val windows = historyWindowsForMonth(budget, year, month, today, startDay)
         // Resolve the group once so the per-window spend query doesn't
         // re-hit the dao for every window.
         val group = getGroupOrFallback(budget)
@@ -966,7 +966,7 @@ class BudgetGroupRepository @Inject constructor(
             PastWindowSpending(
                 window = w,
                 spent = spent,
-                capDate = cap,
+                capDate = effectiveEnd,
                 isLive = isLive,
                 carry = carrySource(budget, w, startDay)?.let { carryIn(currency, group, it, parentOf, convert) }
             )

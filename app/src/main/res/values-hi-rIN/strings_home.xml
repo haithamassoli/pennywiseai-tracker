@@ -3,7 +3,6 @@
     <!-- ══ Home screen ══ -->
     <string name="home_transaction_deleted">लेन-देन हटाया गया</string>
     <string name="home_undo">पूर्ववत करें</string>
-    <string name="home_upgrade_pro">PennyWise Pro में अपग्रेड करें</string>
     <string name="home_profile_filter">प्रोफ़ाइल फ़िल्टर</string>
     <string name="home_more_options">अधिक विकल्प</string>
     <string name="home_view_all">सभी देखें</string>
@@ -11,15 +10,12 @@
     <string name="home_manage">मैनेज करें</string>
     <string name="home_search_transactions">लेन-देन खोजें</string>
     <string name="home_cancel">रद्द करें</string>
-    <string name="home_close">बंद करें</string>
     <!-- Home sections (headers + edit-home sheet) -->
     <string name="home_section_budgets">बजट</string>
     <string name="home_section_goals">लक्ष्य</string>
     <string name="home_section_loans">उधार</string>
     <string name="home_section_groups">ग्रुप</string>
-    <string name="home_section_recent_transactions">हाल के लेन-देन</string>
     <string name="home_section_accounts">बैंक खाते</string>
-    <string name="home_section_subscriptions">आने वाली सदस्यताएँ</string>
     <string name="home_section_activity">गतिविधि</string>
     <!-- Empty state -->
     <string name="home_empty_headline">अभी तक कोई लेनदेन नहीं</string>
@@ -30,13 +26,15 @@
     <string name="home_fab_sync">SMS सिंक करें (पूरा रीसिंक करने के लिए देर तक दबाएँ)</string>
     <string name="home_fab_sync_hint">पूरा रीसिंक करने के लिए दबाए रखें</string>
     <string name="home_resync_title">संदेश फिर से पढ़ें</string>
+    <!-- Home shortcut labels sit under a 64dp shape: keep them to about 10 characters -->
+    <!-- Read out for the Unsorted shortcut with its count badge -->
+    <!-- %1$d is the most shortcuts the row holds (4) -->
     <string name="home_resync_scan_again">सभी संदेश फिर से स्कैन करें</string>
     <string name="home_resync_scan_again_desc">जो छूट गया था, वह जुड़ जाएगा। आपके बदलाव और सभी मौजूदा लेन-देन जैसे हैं वैसे ही रहेंगे।</string>
     <string name="home_resync_rebuild">शुरू से दोबारा बनाएं</string>
     <string name="home_resync_rebuild_desc">पार्सर के सुधार लागू करने के लिए SMS लेन-देन दोबारा पढ़ता है। SMS लेन-देन में किए बदलाव रीसेट हो जाएंगे। मैनुअल, आयात किए गए, उधार और ग्रुप वाले लेन-देन बने रहेंगे।</string>
     <!-- More options sheet -->
     <string name="home_menu_title">अधिक विकल्प</string>
-    <string name="home_menu_settings">सेटिंग्स</string>
     <string name="home_menu_edit_home">होम स्क्रीन बदलें</string>
     <string name="home_menu_discord">फ़ीडबैक के लिए Discord से जुड़ें</string>
     <string name="home_menu_rate">Play Store पर रेटिंग दें</string>
@@ -45,13 +43,6 @@
     <string name="home_edit_description">अपने होम स्क्रीन पर सेक्शन्स को पुन: क्रमित या छुपाएँ।</string>
     <string name="home_edit_move_up">%1$s को ऊपर ले जाएँ</string>
     <string name="home_edit_move_down">%1$s को नीचे ले जाएँ</string>
-    <!-- Calculation breakdown dialog -->
-    <string name="home_breakdown_title">गणना का विभाजन</string>
-    <!-- Month name, then day range, e.g. "March 1-15" -->
-    <string name="home_breakdown_formula">फ़ॉर्मूला: आय - खर्च = कुल संपत्ति\nहरा (+) = बचत | लाल (-) = ज़्यादा खर्च</string>
-    <string name="home_breakdown_income">आय</string>
-    <string name="home_breakdown_expenses">खर्च</string>
-    <string name="home_breakdown_net_worth">कुल संपत्ति</string>
     <!-- Subscriptions + loans summary cards -->
     <plurals name="home_active_subscriptions">
         <item quantity="one">%1$d एक्टिव सदस्यता</item>
@@ -65,11 +56,6 @@
     <string name="home_loans_owed_to_you">आपको %1$s मिलने हैं</string>
     <string name="home_loans_you_owe">आपको %1$s चुकाने हैं</string>
     <!-- ══ Greeting card (home header) ══ -->
-    <string name="greeting_last_day_of_month">%1$s का अंतिम दिन</string>
-    <plurals name="greeting_days_left_in_month">
-        <item quantity="one">%2$s में %1$d दिन बाकी</item>
-        <item quantity="other">%2$s में %1$d दिन बाकी</item>
-    </plurals>
     <string name="greeting_good_morning">सुप्रभात</string>
     <string name="greeting_good_afternoon">नमस्कार (दोपहर)</string>
     <string name="greeting_good_evening">शुभ संध्या</string>
@@ -80,8 +66,8 @@
     <!-- ══ Bottom navigation ══ -->
     <string name="nav_home">घर</string>
     <string name="nav_transactions">टाइमलाइन</string>
-    <string name="nav_analytics">विश्लेषण</string>
-    <string name="nav_chat">चैट</string>
+    <string name="nav_analytics">जानकारी</string>
+    <string name="nav_chat">पूछें</string>
     <!-- ══ Shared components ══ -->
     <string name="expandable_list_view_less">कम देखें</string>
     <string name="expandable_list_view_all_more">सभी देखें (%1$d और)</string>
@@ -161,6 +147,7 @@
     <string name="balance_card_summary_expenses">खर्च</string>
     <string name="balance_card_summary_lent">उधार दिया</string>
     <string name="balance_card_summary_saved">बचत</string>
+    <!-- TalkBack: what tapping a figure does ("double tap to see its transactions") -->
     <!-- Budget card -->
     <string name="budget_card_over_budget">बजट से %1$s ज़्यादा</string>
     <string name="budget_card_remaining">%1$s बाकी</string>
@@ -329,6 +316,16 @@
     <string name="home_payday_card_body">लगता है आपका वेतन महीने की %1$d तारीख को आता है। क्या हर बजट महीना उसी दिन से शुरू करें? आप इसे सेटिंग्स में बदल सकते हैं।</string>
     <string name="home_payday_card_action">%1$d तारीख से शुरू करें</string>
     <string name="home_payday_card_dismiss">हटाएं</string>
+    <!-- Home hero card. %1$s is a month name ("November") -->
+    <!-- %1$s is the user's own budget name -->
+    <!-- %1$s is a month name ("November") -->
+    <!-- %1$s is the user's own budget name -->
+    <!-- %1$s is a formatted amount -->
+    <!-- The budget limit under the progress bar; %1$s is a formatted amount -->
+    <!-- What can still be spent each day; %1$s is a formatted amount -->
+    <!-- Home nudge under the hero: the mascot's one line. %1$s is a formatted amount -->
+    <!-- Home sections -->
+    <!-- Subtitle of a recent transaction still in Others -->
     <!-- Month-end forecast on the "Spent this month" card -->
     <string name="forecast_on_track">%2$s तक %1$s होने की राह पर</string>
     <string name="forecast_over_usual">आम से %1$s ज़्यादा</string>

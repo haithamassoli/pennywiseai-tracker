@@ -3,7 +3,6 @@
     <!-- ══ Home screen ══ -->
     <string name="home_transaction_deleted">Transacción eliminada</string>
     <string name="home_undo">Deshacer</string>
-    <string name="home_upgrade_pro">Pásate a PennyWise Pro</string>
     <string name="home_profile_filter">Filtro de perfil</string>
     <string name="home_more_options">Más opciones</string>
     <string name="home_view_all">Ver todo</string>
@@ -11,15 +10,12 @@
     <string name="home_manage">Administrar</string>
     <string name="home_search_transactions">Buscar transacciones</string>
     <string name="home_cancel">Cancelar</string>
-    <string name="home_close">Cerrar</string>
     <!-- Home sections (headers + edit-home sheet) -->
     <string name="home_section_budgets">Presupuestos</string>
     <string name="home_section_goals">Metas</string>
     <string name="home_section_loans">Préstamos</string>
     <string name="home_section_groups">Grupos</string>
-    <string name="home_section_recent_transactions">Transacciones recientes</string>
     <string name="home_section_accounts">Cuentas bancarias</string>
-    <string name="home_section_subscriptions">Próximas suscripciones</string>
     <string name="home_section_activity">Actividad</string>
     <!-- Empty state -->
     <string name="home_empty_headline">Aún no hay transacciones</string>
@@ -30,13 +26,15 @@
     <string name="home_fab_sync">Sincronizar SMS (mantén presionado para resincronizar todo)</string>
     <string name="home_fab_sync_hint">Mantén presionado para resincronizar todo</string>
     <string name="home_resync_title">Volver a leer los mensajes</string>
+    <!-- Home shortcut labels sit under a 64dp shape: keep them to about 10 characters -->
+    <!-- Read out for the Unsorted shortcut with its count badge -->
+    <!-- %1$d is the most shortcuts the row holds (4) -->
     <string name="home_resync_scan_again">Escanear todos los mensajes otra vez</string>
     <string name="home_resync_scan_again_desc">Agrega lo que se haya pasado por alto. Tus cambios y todas las transacciones existentes se quedan como están.</string>
     <string name="home_resync_rebuild">Reconstruir desde cero</string>
     <string name="home_resync_rebuild_desc">Vuelve a leer las transacciones de SMS para aplicar correcciones del lector. Se restablecen los cambios en transacciones de SMS. Se conservan las transacciones manuales, importadas, de préstamos y agrupadas.</string>
     <!-- More options sheet -->
     <string name="home_menu_title">Más opciones</string>
-    <string name="home_menu_settings">Ajustes</string>
     <string name="home_menu_edit_home">Editar pantalla de inicio</string>
     <string name="home_menu_discord">Únete a Discord para dar tu opinión</string>
     <string name="home_menu_rate">Califica en Play Store</string>
@@ -45,13 +43,6 @@
     <string name="home_edit_description">Reordena u oculta secciones de tu pantalla de inicio.</string>
     <string name="home_edit_move_up">Subir %1$s</string>
     <string name="home_edit_move_down">Bajar %1$s</string>
-    <!-- Calculation breakdown dialog -->
-    <string name="home_breakdown_title">Desglose del cálculo</string>
-    <!-- Month name, then day range, e.g. "March 1-15" -->
-    <string name="home_breakdown_formula">Fórmula: Ingresos - Gastos = Patrimonio neto\nVerde (+) = Ahorro | Rojo (-) = Gasto excesivo</string>
-    <string name="home_breakdown_income">Ingresos</string>
-    <string name="home_breakdown_expenses">Gastos</string>
-    <string name="home_breakdown_net_worth">Patrimonio neto</string>
     <!-- Subscriptions + loans summary cards -->
     <plurals name="home_active_subscriptions">
         <item quantity="one">%1$d suscripción activa</item>
@@ -65,11 +56,6 @@
     <string name="home_loans_owed_to_you">Te deben %1$s</string>
     <string name="home_loans_you_owe">Debes %1$s</string>
     <!-- ══ Greeting card (home header) ══ -->
-    <string name="greeting_last_day_of_month">Último día de %1$s</string>
-    <plurals name="greeting_days_left_in_month">
-        <item quantity="one">Queda %1$d día de %2$s</item>
-        <item quantity="other">Quedan %1$d días de %2$s</item>
-    </plurals>
     <string name="greeting_good_morning">Buenos días</string>
     <string name="greeting_good_afternoon">Buenas tardes</string>
     <string name="greeting_good_evening">Buenas noches</string>
@@ -80,7 +66,8 @@
     <!-- ══ Bottom navigation ══ -->
     <string name="nav_home">Inicio</string>
     <string name="nav_transactions">Transacciones</string>
-    <string name="nav_analytics">Análisis</string>
+    <string name="nav_analytics">Perspectivas</string>
+    <string name="nav_chat">Preguntar</string>
     <!-- ══ Shared components ══ -->
     <string name="expandable_list_view_less">Ver menos</string>
     <string name="expandable_list_view_all_more">Ver todo (%1$d más)</string>
@@ -160,6 +147,7 @@
     <string name="balance_card_summary_expenses">Gastos</string>
     <string name="balance_card_summary_lent">Prestado</string>
     <string name="balance_card_summary_saved">Ahorrado</string>
+    <!-- TalkBack: what tapping a figure does ("double tap to see its transactions") -->
     <!-- Budget card -->
     <string name="budget_card_over_budget">%1$s por encima del presupuesto</string>
     <string name="budget_card_remaining">Quedan %1$s</string>
@@ -328,6 +316,16 @@
     <string name="home_payday_card_body">Parece que tu sueldo llega el día %1$d del mes. ¿Quieres que cada mes de presupuesto empiece ese día? Puedes cambiarlo en Ajustes.</string>
     <string name="home_payday_card_action">Empezar el día %1$d</string>
     <string name="home_payday_card_dismiss">Descartar</string>
+    <!-- Home hero card. %1$s is a month name ("November") -->
+    <!-- %1$s is the user's own budget name -->
+    <!-- %1$s is a month name ("November") -->
+    <!-- %1$s is the user's own budget name -->
+    <!-- %1$s is a formatted amount -->
+    <!-- The budget limit under the progress bar; %1$s is a formatted amount -->
+    <!-- What can still be spent each day; %1$s is a formatted amount -->
+    <!-- Home nudge under the hero: the mascot's one line. %1$s is a formatted amount -->
+    <!-- Home sections -->
+    <!-- Subtitle of a recent transaction still in Others -->
     <!-- Month-end forecast on the "Spent this month" card -->
     <string name="forecast_on_track">Vas camino a %1$s para el %2$s</string>
     <string name="forecast_over_usual">%1$s más de lo habitual</string>
