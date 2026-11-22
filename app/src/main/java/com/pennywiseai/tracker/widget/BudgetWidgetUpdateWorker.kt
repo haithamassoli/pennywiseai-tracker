@@ -264,7 +264,10 @@ class BudgetWidgetUpdateWorker @AssistedInject constructor(
                     netSavings = netSavings,
                     savingsRate = savingsRate,
                     savingsDelta = savingsDelta,
-                    currency = currency
+                    currency = currency,
+                    daysElapsed = raw.daysElapsed,
+                    // Both counts take in today.
+                    windowDays = raw.daysElapsed + raw.daysRemaining - 1
                 )
             } else {
                 val spending = budgetGroupRepository.getGroupSpending(
@@ -280,6 +283,25 @@ class BudgetWidgetUpdateWorker @AssistedInject constructor(
 
                 val limitRemaining = spending.totalLimitBudget - spending.totalLimitSpent
                 val usage = widgetLimitUsage(spending.totalLimitBudget, spending.totalLimitSpent, spending.groups)
+                // Each limit's own window, not pageWindow: that union also holds every
+                // other slice that meets the month, so it does not match this spend.
+                val pace = widgetLimitPace(
+                    today,
+                    spending.groups.mapNotNull { group ->
+                        if (group.group.budget.groupType != BudgetGroupType.LIMIT || group.windowDays < 1) {
+                            null
+                        } else {
+                            WidgetLimitWindow(
+                                spent = group.totalActual,
+                                limit = group.totalBudget,
+                                windowStart = group.windowStart,
+                                windowEnd = group.windowEnd,
+                                daysElapsed = group.daysElapsed,
+                                windowDays = group.windowDays
+                            )
+                        }
+                    }
+                )
 
                 BudgetWidgetData(
                     totalSpent = spending.totalLimitSpent,
@@ -292,7 +314,10 @@ class BudgetWidgetUpdateWorker @AssistedInject constructor(
                     netSavings = spending.netSavings,
                     savingsRate = spending.savingsRate,
                     savingsDelta = savingsDelta,
-                    currency = currency
+                    currency = currency,
+                    daysElapsed = pace.daysElapsed,
+                    windowDays = pace.windowDays,
+                    foldedDaysOver = pace.foldedDaysOver
                 )
             }
 
