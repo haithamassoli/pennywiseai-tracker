@@ -66,6 +66,7 @@ import com.pennywiseai.tracker.ui.theme.Dimensions
 import com.pennywiseai.tracker.ui.theme.GoogleSansFlexAxes
 import com.pennywiseai.tracker.ui.theme.LocalGoogleSansFlexActive
 import com.pennywiseai.tracker.ui.theme.Spacing
+import com.pennywiseai.tracker.ui.theme.bestInk
 import com.pennywiseai.tracker.ui.theme.withFlexAxes
 import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
@@ -604,7 +605,12 @@ private fun HomeBarTitle(
                     style = MaterialTheme.typography.labelSmall.copy(
                         fontWeight = FontWeight.Bold
                     ),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    // A user-picked avatar colour has no on-role.
+                    color = if (profileBackgroundColor != 0) {
+                        Color(profileBackgroundColor).bestInk()
+                    } else {
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    }
                 )
             }
         }
