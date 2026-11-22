@@ -91,7 +91,8 @@ fun AnalyticsSummaryCard(
                     autoSize = TextAutoSize.StepBased(
                         minFontSize = PennyWiseText.autoSizeFloor,
                         maxFontSize = totalStyle.fontSize
-                    )
+                    ),
+                    decimalSeparator = CurrencyFormatter.decimalSeparator(currency),
                 )
             }
             if (!AmountPrivacy.hidden) {
